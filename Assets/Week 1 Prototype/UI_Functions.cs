@@ -48,6 +48,16 @@ public class UI_Functions : MonoBehaviour {
 
             ConnectToServer();
 
+            Destroy(local_canvas_envelope);
+            Network.Instantiate(canvas_envelope, transform.position, transform.rotation, 0);
+
+            add = GameObject.Find("addToCounter").GetComponent<Button>();
+            add.onClick.AddListener(() => { addToCounter(); });
+            print(add.GetComponentInChildren<Text>().text);
+            countText = GameObject.Find("Count").GetComponent<Text>();
+            print(countText.text);
+            count = 0;
+
             alreadyConnected = true;
         }
     } 
@@ -60,7 +70,7 @@ public class UI_Functions : MonoBehaviour {
 
     void ConnectToServer()
     {
-        Network.Connect("216.106.154.95", 25000, "password");
+        Network.Connect(inputField.text.ToString(), 25000, "password");
     }
 
 ////Generic debug output for server/client status////
