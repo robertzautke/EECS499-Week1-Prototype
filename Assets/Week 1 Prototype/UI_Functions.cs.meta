@@ -2,7 +2,15 @@ fileFormatVersion: 2
 guid: 945b5dbfcf322024299b4158b062415a
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - canvas_envelope: {fileID: 100018, guid: bb79bf37f2d272e4fbcc453783a0bb2e, type: 2}
+  - canvas2_envelope: {fileID: 100002, guid: a64d422467e8d8042b81f272a24729c1, type: 2}
+  - local_canvas_envelope: {instanceID: 0}
+  - inputField: {instanceID: 0}
+  - clientConnect: {instanceID: 0}
+  - startServer: {instanceID: 0}
+  - add: {instanceID: 0}
+  - countText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

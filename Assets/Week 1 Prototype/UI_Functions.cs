@@ -47,30 +47,8 @@ public class UI_Functions : MonoBehaviour {
         if (!alreadyConnected) {
 
             ConnectToServer();
-
             Destroy(canvas_envelope);
 
-                //for (int x = 0; x <= 1000000; x++) {
-
-             //    if (x == 1000000) {
-                //        Destroy(local_canvas_envelope);
-                //        Network.Instantiate(canvas_envelope, transform.position, transform.rotation, 0);
-
-             //        add = GameObject.Find("addToCounter").GetComponent<Button>();
-                //        add.onClick.AddListener(() => { addToCounter(); });
-                //        print(add.GetComponentInChildren<Text>().text);
-                //        countText = GameObject.Find("Count").GetComponent<Text>();
-                //        print(countText.text);
-                //        count = 0;
-                //        networkView.RPC("addToCounter", RPCMode.All);
-                //    }
-                //};
-
-
-
-
-
-             alreadyConnected = true;
         }
     } 
 
@@ -101,6 +79,11 @@ public class UI_Functions : MonoBehaviour {
     void OnConnectedToServer()
     {
         Debug.Log("Connected to server");
+        alreadyConnected = true;
+
+        add = GameObject.Find("addToCounter").GetComponent<Button>();
+        add.onClick.AddListener(() => { addToCounter(); });
+        countText = GameObject.Find("Count").GetComponent<Text>();
     }
     void OnDisconnectedFromServer(NetworkDisconnection info)
     {
