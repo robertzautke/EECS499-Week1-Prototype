@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UI_Functions : MonoBehaviour {
 
     public GameObject canvas_envelope;
+    public GameObject canvas2_envelope;
     public GameObject local_canvas_envelope;
     public InputField inputField;
     public Button clientConnect;
@@ -17,6 +18,7 @@ public class UI_Functions : MonoBehaviour {
     private bool alreadyConnected = false;
 
 	void Start () {
+        
 	}
 	
 	void Update () {
@@ -25,15 +27,13 @@ public class UI_Functions : MonoBehaviour {
 
     public void startServerButtonClick() {
         if (!serverAlreadyStarted) {
-
             Network.incomingPassword = "password";
             bool useNat = !Network.HavePublicAddress();
             Network.InitializeServer(32, 25000, useNat);
+            Destroy(canvas_envelope);
+            Network.Instantiate(canvas2_envelope, transform.position, transform.rotation, 0);
 
-            Destroy(local_canvas_envelope);
-            Network.Instantiate(canvas_envelope, transform.position, transform.rotation, 0);
-
-            add = GameObject.Find("addToCounter").GetComponent<Button>();
+            add = GameObject.Find("Add").GetComponent<Button>();
             add.onClick.AddListener(() => { addToCounter(); });
             print(add.GetComponentInChildren<Text>().text);
             countText = GameObject.Find("Count").GetComponent<Text>();
@@ -48,22 +48,39 @@ public class UI_Functions : MonoBehaviour {
 
             ConnectToServer();
 
-            Destroy(local_canvas_envelope);
-            Network.Instantiate(canvas_envelope, transform.position, transform.rotation, 0);
+            Destroy(canvas_envelope);
 
-            add = GameObject.Find("addToCounter").GetComponent<Button>();
-            add.onClick.AddListener(() => { addToCounter(); });
-            print(add.GetComponentInChildren<Text>().text);
-            countText = GameObject.Find("Count").GetComponent<Text>();
-            print(countText.text);
-            count = 0;
+                //for (int x = 0; x <= 1000000; x++) {
 
-            alreadyConnected = true;
+             //    if (x == 1000000) {
+                //        Destroy(local_canvas_envelope);
+                //        Network.Instantiate(canvas_envelope, transform.position, transform.rotation, 0);
+
+             //        add = GameObject.Find("addToCounter").GetComponent<Button>();
+                //        add.onClick.AddListener(() => { addToCounter(); });
+                //        print(add.GetComponentInChildren<Text>().text);
+                //        countText = GameObject.Find("Count").GetComponent<Text>();
+                //        print(countText.text);
+                //        count = 0;
+                //        networkView.RPC("addToCounter", RPCMode.All);
+                //    }
+                //};
+
+
+
+
+
+             alreadyConnected = true;
         }
     } 
 
-    [RPC]
+
     public void addToCounter() {
+        networkView.RPC("addToAllCounters", RPCMode.All);
+    }
+
+    [RPC]
+    public void addToAllCounters() {
         count++;
         countText.text = count.ToString();
     }
