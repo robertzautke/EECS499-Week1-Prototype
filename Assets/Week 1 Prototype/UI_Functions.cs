@@ -12,7 +12,7 @@ public class UI_Functions : MonoBehaviour {
     public bool serverAlreadyStarted = false;
     public bool alreadyConnected = false;
     private int numberOfPlayers = 0;
-	public int numberOfPlayersNeeded = 1;
+	public int numberOfPlayersNeeded = 2;
 
     public void startServerButtonClick() {
         if (!serverAlreadyStarted) {
@@ -26,7 +26,6 @@ public class UI_Functions : MonoBehaviour {
         if (!alreadyConnected) {
 
             ConnectToServer();
-
         }
     } 
 
@@ -43,8 +42,9 @@ public class UI_Functions : MonoBehaviour {
 
         serverAlreadyStarted = true;
         numberOfPlayers++;
+		print(numberOfPlayers);
         Destroy(canvas_envelope);
-
+		Network.Instantiate(back, new Vector3(0, 0, 0), transform.rotation, 0);
 		if (numberOfPlayers == numberOfPlayersNeeded)
 		{
 			Debug.Log("Game is Starting");
@@ -58,6 +58,12 @@ public class UI_Functions : MonoBehaviour {
         Debug.Log("Connected to server");
         alreadyConnected = true;
 		Destroy(canvas_envelope);
+		//numberOfPlayers++;
+		//if ((numberOfPlayers + 1) == numberOfPlayersNeeded)
+		//{
+		//	Debug.Log("Game is Starting");
+		//	StartGame();
+		//}
     }
 
 
@@ -97,10 +103,10 @@ public class UI_Functions : MonoBehaviour {
     {
         numberOfPlayers++;
         Debug.Log("Player " + numberOfPlayers + " connected from " + player.ipAddress + ":" + player.port);
-
+		print(numberOfPlayers);
         if (numberOfPlayers == numberOfPlayersNeeded) {
             Debug.Log("Game is Starting");
-			StartGame();
+			networkView.RPC("networkSignal_StartGame", RPCMode.All);
         }
 
     }
@@ -116,9 +122,35 @@ public class UI_Functions : MonoBehaviour {
 
 /////////////////////////////////////////////////////////////////////////////////
 
+////Send Serialized Network Data and RPC functions///////////////////////////////
+
+	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) {
+
+		int s = 0;
+		if (stream.isWriting) { 
+			s = 1;
+			stream.Serialize(ref s);
+		}
+		else if (stream.isReading) { 
+			stream.Serialize(ref s);
+
+			print(s);
+		}
+	
+	}
+
+	[RPC]
+	void networkSignal_StartGame() { 
+		StartGame();
+	}
+
+/////////////////////////////////////////////////////////////////////////////////
+
 	public GameObject back;
+	public GameObject backClient;
 	public GameObject cursor;
 	private GameObject scriptCursor;
+	private GameObject scriptCursor2 = null;
 	private bool gameStarted = false;
 
 	Vector3 rayCollision;
@@ -127,7 +159,6 @@ public class UI_Functions : MonoBehaviour {
 	void StartGame() {
 
 		gameStarted = true;
-		back.renderer.enabled = true;
 		scriptCursor = (GameObject)Network.Instantiate(cursor, new Vector3(0, 0, -0.5f), transform.rotation, 0);
 	}
 
