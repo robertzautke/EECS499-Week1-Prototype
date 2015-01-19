@@ -21,35 +21,49 @@ public class marker : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
+
 		if (ui_controller.GetComponent<UI_Functions>().serverAlreadyStarted &&
-			ui_controller.GetComponent<UI_Functions>().playerTurn == 0 &&
-			!clickedServer && !clickedClient) {
-			
-			ui_controller.GetComponent<UI_Functions>().playerTurn = 1;
-			clickedServer = true;
-			this.renderer.material.color = Color.blue;
+		ui_controller.GetComponent<UI_Functions>().playerTurn == 0 &&
+		!clickedServer && !clickedClient)
+		{
+			this.networkView.RPC("networkSignal_OnMouseDown", RPCMode.All, 0);
+
 
 			string s = this.name;
 			char markerNumberChar = s[s.Length - 1];
 			double markerValueDouble = Char.GetNumericValue(markerNumberChar);
 			int markerNumber = Convert.ToInt32(markerValueDouble);
 			print(markerNumber);
-			back.GetComponent<BackScript>().GameWinConditionCheck(markerNumber, 0);
-		 }
+			ui_controller.GetComponent<BackScript>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 0);
+		}
 
 		else if (ui_controller.GetComponent<UI_Functions>().clientConnect &&
 			ui_controller.GetComponent<UI_Functions>().playerTurn == 1 &&
 			!clickedServer && !clickedClient)
 		{
 
-			ui_controller.GetComponent<UI_Functions>().playerTurn = 0;
-			clickedClient = true;
-			this.renderer.material.color = Color.red;
+			this.networkView.RPC("networkSignal_OnMouseDown", RPCMode.All, 1);
 
 			string s = this.name;
 			int markerNumber = Convert.ToInt32(s[s.Length - 1]);
 			print(markerNumber);
-			back.GetComponent<BackScript>().GameWinConditionCheck(markerNumber, 1);
+			ui_controller.GetComponent<BackScript>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 1);
 		}
+
+	}
+
+	[RPC]
+	void networkSignal_OnMouseDown(int player){
+		if (player == 0) { 
+			ui_controller.GetComponent<UI_Functions>().playerTurn = 1;
+			clickedServer = true;
+			this.renderer.material.color = Color.blue;
+		}
+		else if (player == 1) {
+			ui_controller.GetComponent<UI_Functions>().playerTurn = 0;
+			clickedClient = true;
+			this.renderer.material.color = Color.red;	
+		}
+
 	}
 }

@@ -48,7 +48,7 @@ public class UI_Functions : MonoBehaviour {
 		print(numberOfPlayers);
         Destroy(canvas_envelope);
 		instantiated_wait_canvas = (GameObject)GameObject.Instantiate(wait_canvas);
-		Network.Instantiate(back, new Vector3(0, 0, 0), transform.rotation, 0);
+
     }
 
 
@@ -100,6 +100,7 @@ public class UI_Functions : MonoBehaviour {
 
         if (numberOfPlayers == numberOfPlayersNeeded) {
 			Destroy(instantiated_wait_canvas);
+			Network.Instantiate(back, new Vector3(0, 0, 0), transform.rotation, 0);
 			networkView.RPC("networkSignal_StartGame", RPCMode.All);
         }
 
@@ -138,7 +139,40 @@ public class UI_Functions : MonoBehaviour {
 		StartGame();
 	}
 
+	[RPC]
+	public void networkSignal_GameWinConditionCheck(int i, int playerNum)
+	{
 
+		bs[i].taken = true;
+		bs[i].player = playerNum;
+
+		if (bs[0].taken && bs[0].player == 0 && bs[1].taken && bs[1].player == 0 && bs[2].taken && bs[2].player == 0 ||
+			bs[3].taken && bs[3].player == 0 && bs[4].taken && bs[4].player == 0 && bs[5].taken && bs[5].player == 0 ||
+			bs[6].taken && bs[6].player == 0 && bs[7].taken && bs[7].player == 0 && bs[8].taken && bs[8].player == 0 ||
+			bs[0].taken && bs[0].player == 0 && bs[3].taken && bs[3].player == 0 && bs[6].taken && bs[6].player == 0 ||
+			bs[1].taken && bs[1].player == 0 && bs[4].taken && bs[4].player == 0 && bs[7].taken && bs[7].player == 0 ||
+			bs[2].taken && bs[2].player == 0 && bs[5].taken && bs[5].player == 0 && bs[8].taken && bs[8].player == 0 ||
+			bs[0].taken && bs[0].player == 0 && bs[4].taken && bs[4].player == 0 && bs[8].taken && bs[8].player == 0 ||
+			bs[2].taken && bs[2].player == 0 && bs[4].taken && bs[4].player == 0 && bs[6].taken && bs[6].player == 0)
+		{
+
+			print("Player 1 wins!");
+
+		}
+		else if (bs[0].taken && bs[0].player == 1 && bs[1].taken && bs[1].player == 1 && bs[2].taken && bs[2].player == 1 ||
+		  bs[3].taken && bs[3].player == 1 && bs[4].taken && bs[4].player == 1 && bs[5].taken && bs[5].player == 1 ||
+		  bs[6].taken && bs[6].player == 1 && bs[7].taken && bs[7].player == 1 && bs[8].taken && bs[8].player == 1 ||
+		  bs[0].taken && bs[0].player == 1 && bs[3].taken && bs[3].player == 1 && bs[6].taken && bs[6].player == 1 ||
+		  bs[1].taken && bs[1].player == 1 && bs[4].taken && bs[4].player == 1 && bs[7].taken && bs[7].player == 1 ||
+		  bs[2].taken && bs[2].player == 1 && bs[5].taken && bs[5].player == 1 && bs[8].taken && bs[8].player == 1 ||
+		  bs[0].taken && bs[0].player == 1 && bs[4].taken && bs[4].player == 1 && bs[8].taken && bs[8].player == 1 ||
+		  bs[2].taken && bs[2].player == 1 && bs[4].taken && bs[4].player == 1 && bs[6].taken && bs[6].player == 1)
+		{
+
+			print("Player 2 wins!");
+
+		}
+	}
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -153,24 +187,43 @@ public class UI_Functions : MonoBehaviour {
 	Vector3 rayCollision;
 	Vector2 mousePos;
 
+
+	BoardSpace[] bs;
+	private class BoardSpace
+	{
+		public bool taken;
+		public int player;
+	}
+
+
+	void Start()
+	{
+		bs = new BoardSpace[9];
+		for (int i = 0; i < 9; i++)
+		{
+			bs[i] = new BoardSpace();
+		}
+
+	}
+
 	void StartGame() {
 
 		Debug.Log("Game is Starting");
 
 		gameStarted = true;
-		scriptCursor = (GameObject)Network.Instantiate(cursor, new Vector3(0, 0, -0.5f), transform.rotation, 0);
+		//scriptCursor = (GameObject)Network.Instantiate(cursor, new Vector3(0, 0, -0.5f), transform.rotation, 0);
 	}
 
 	void Update() {
 		if (gameStarted) {
 
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			Physics.Raycast(ray, out hit);
-			Debug.Log("This hit at " + hit.point);
+			//Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			//RaycastHit hit;
+			//Physics.Raycast(ray, out hit);
+			//Debug.Log("This hit at " + hit.point);
 
-			Vector3 c = new Vector3(hit.point.x, hit.point.y, -0.5f);
-			scriptCursor.transform.position = c;
+			//Vector3 c = new Vector3(hit.point.x, hit.point.y, -0.5f);
+			//scriptCursor.transform.position = c;
 		}
 	}
 
