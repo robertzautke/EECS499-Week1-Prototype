@@ -5,12 +5,15 @@ using UnityEngine.UI;
 public class UI_Functions : MonoBehaviour {
 
     public GameObject canvas_envelope;
+	public GameObject wait_canvas;
+	private GameObject instantiated_wait_canvas;
     public InputField inputField;
     public Button clientConnect;
     public Button startServer;
 
     public bool serverAlreadyStarted = false;
     public bool alreadyConnected = false;
+
     private int numberOfPlayers = 0;
 	public int numberOfPlayersNeeded = 2;
 
@@ -44,12 +47,8 @@ public class UI_Functions : MonoBehaviour {
         numberOfPlayers++;
 		print(numberOfPlayers);
         Destroy(canvas_envelope);
+		instantiated_wait_canvas = (GameObject)GameObject.Instantiate(wait_canvas);
 		Network.Instantiate(back, new Vector3(0, 0, 0), transform.rotation, 0);
-		if (numberOfPlayers == numberOfPlayersNeeded)
-		{
-			Debug.Log("Game is Starting");
-			StartGame();
-		}
     }
 
 
@@ -58,12 +57,6 @@ public class UI_Functions : MonoBehaviour {
         Debug.Log("Connected to server");
         alreadyConnected = true;
 		Destroy(canvas_envelope);
-		//numberOfPlayers++;
-		//if ((numberOfPlayers + 1) == numberOfPlayersNeeded)
-		//{
-		//	Debug.Log("Game is Starting");
-		//	StartGame();
-		//}
     }
 
 
@@ -104,8 +97,9 @@ public class UI_Functions : MonoBehaviour {
         numberOfPlayers++;
         Debug.Log("Player " + numberOfPlayers + " connected from " + player.ipAddress + ":" + player.port);
 		print(numberOfPlayers);
+
         if (numberOfPlayers == numberOfPlayersNeeded) {
-            Debug.Log("Game is Starting");
+			Destroy(instantiated_wait_canvas);
 			networkView.RPC("networkSignal_StartGame", RPCMode.All);
         }
 
@@ -134,7 +128,7 @@ public class UI_Functions : MonoBehaviour {
 		else if (stream.isReading) { 
 			stream.Serialize(ref s);
 
-			print(s);
+			Debug.Log(s);
 		}
 	
 	}
@@ -144,19 +138,24 @@ public class UI_Functions : MonoBehaviour {
 		StartGame();
 	}
 
+
+
 /////////////////////////////////////////////////////////////////////////////////
 
 	public GameObject back;
-	public GameObject backClient;
 	public GameObject cursor;
 	private GameObject scriptCursor;
 	private GameObject scriptCursor2 = null;
 	private bool gameStarted = false;
 
+	public int playerTurn = 0;
+
 	Vector3 rayCollision;
 	Vector2 mousePos;
 
 	void StartGame() {
+
+		Debug.Log("Game is Starting");
 
 		gameStarted = true;
 		scriptCursor = (GameObject)Network.Instantiate(cursor, new Vector3(0, 0, -0.5f), transform.rotation, 0);
@@ -174,4 +173,6 @@ public class UI_Functions : MonoBehaviour {
 			scriptCursor.transform.position = c;
 		}
 	}
+
+
 }
