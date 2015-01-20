@@ -38,7 +38,7 @@ public class marker : MonoBehaviour {
 			ui_controller.GetComponent<UI_Functions>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 0);
 		}
 
-		else if (ui_controller.GetComponent<UI_Functions>().clientConnect &&
+		else if (ui_controller.GetComponent<UI_Functions>().alreadyConnected &&
 			ui_controller.GetComponent<UI_Functions>().playerTurn == 1 &&
 			!clickedServer && !clickedClient)
 		{
