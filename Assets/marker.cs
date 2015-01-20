@@ -21,6 +21,7 @@ public class marker : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
+		print("Mouse Down");
 
 		if (ui_controller.GetComponent<UI_Functions>().serverAlreadyStarted &&
 		ui_controller.GetComponent<UI_Functions>().playerTurn == 0 &&
@@ -34,7 +35,7 @@ public class marker : MonoBehaviour {
 			double markerValueDouble = Char.GetNumericValue(markerNumberChar);
 			int markerNumber = Convert.ToInt32(markerValueDouble);
 			print(markerNumber);
-			ui_controller.GetComponent<BackScript>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 0);
+			ui_controller.GetComponent<UI_Functions>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 0);
 		}
 
 		else if (ui_controller.GetComponent<UI_Functions>().clientConnect &&
@@ -45,9 +46,11 @@ public class marker : MonoBehaviour {
 			this.networkView.RPC("networkSignal_OnMouseDown", RPCMode.All, 1);
 
 			string s = this.name;
-			int markerNumber = Convert.ToInt32(s[s.Length - 1]);
+			char markerNumberChar = s[s.Length - 1];
+			double markerValueDouble = Char.GetNumericValue(markerNumberChar);
+			int markerNumber = Convert.ToInt32(markerValueDouble);
 			print(markerNumber);
-			ui_controller.GetComponent<BackScript>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 1);
+			ui_controller.GetComponent<UI_Functions>().networkView.RPC("networkSignal_GameWinConditionCheck", RPCMode.All, markerNumber, 1);
 		}
 
 	}

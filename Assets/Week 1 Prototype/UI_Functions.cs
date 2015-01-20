@@ -143,8 +143,8 @@ public class UI_Functions : MonoBehaviour {
 	public void networkSignal_GameWinConditionCheck(int i, int playerNum)
 	{
 
-		bs[i].taken = true;
-		bs[i].player = playerNum;
+		bs[i - 1].taken = true;
+		bs[i - 1].player = playerNum;
 
 		if (bs[0].taken && bs[0].player == 0 && bs[1].taken && bs[1].player == 0 && bs[2].taken && bs[2].player == 0 ||
 			bs[3].taken && bs[3].player == 0 && bs[4].taken && bs[4].player == 0 && bs[5].taken && bs[5].player == 0 ||
@@ -157,7 +157,10 @@ public class UI_Functions : MonoBehaviour {
 		{
 
 			print("Player 1 wins!");
-
+			GameObject c = (GameObject)GameObject.Instantiate(wait_canvas);
+			c.GetComponentInChildren<Text>().text = "Player 1 wins!";
+			gameFinished = true;
+			
 		}
 		else if (bs[0].taken && bs[0].player == 1 && bs[1].taken && bs[1].player == 1 && bs[2].taken && bs[2].player == 1 ||
 		  bs[3].taken && bs[3].player == 1 && bs[4].taken && bs[4].player == 1 && bs[5].taken && bs[5].player == 1 ||
@@ -170,7 +173,9 @@ public class UI_Functions : MonoBehaviour {
 		{
 
 			print("Player 2 wins!");
-
+			GameObject c = (GameObject)GameObject.Instantiate(wait_canvas);
+			c.GetComponentInChildren<Text>().text = "Player 2 wins!";
+			gameFinished = true;
 		}
 	}
 
@@ -214,16 +219,23 @@ public class UI_Functions : MonoBehaviour {
 		//scriptCursor = (GameObject)Network.Instantiate(cursor, new Vector3(0, 0, -0.5f), transform.rotation, 0);
 	}
 
+
+	bool madeCursor = false;
+	bool gameFinished = false;
 	void Update() {
-		if (gameStarted) {
+		if (gameStarted && gameFinished) {
 
-			//Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			//RaycastHit hit;
-			//Physics.Raycast(ray, out hit);
-			//Debug.Log("This hit at " + hit.point);
+			if (!madeCursor) {
+				scriptCursor = (GameObject)Network.Instantiate(cursor, new Vector3(0, 0, -0.5f), transform.rotation, 0); 
+				madeCursor = true;
+			}
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			Physics.Raycast(ray, out hit);
+			Debug.Log("This hit at " + hit.point);
 
-			//Vector3 c = new Vector3(hit.point.x, hit.point.y, -0.5f);
-			//scriptCursor.transform.position = c;
+			Vector3 c = new Vector3(hit.point.x, hit.point.y, -0.5f);
+			scriptCursor.transform.position = c;
 		}
 	}
 

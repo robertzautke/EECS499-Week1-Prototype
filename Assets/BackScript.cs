@@ -8,12 +8,5 @@ public class BackScript : MonoBehaviour {
 
 
 
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-
 
 }
